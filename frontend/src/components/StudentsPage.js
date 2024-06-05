@@ -174,7 +174,7 @@ export class StudentsPage extends Component {
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h1 className="modal-title fs-5" id="exampleModalLabel">Информация о студенте</h1>
+                                        <h1 className="modal-title fs-5" id="exampleModalLabel" style={{color: '#00AEEF'}}>Информация о студенте</h1>
                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" onClick={this.closeModal}></button>
                                     </div>
                                     <div className="modal-body">
@@ -183,7 +183,7 @@ export class StudentsPage extends Component {
                                         <p style={{color: '#4E4D4D', fontWeight: '700', lineHeight:'30px', marginBottom: '0'}}>Проект</p>
                                         <div>
                                             {this.state.selectedStudent.projects.map((obj, index) => (
-                                                <h1 className='modal-title fs-5' key={index}>{obj.title}</h1>
+                                                <h1 className='modal-title fs-5' style={{color: '#00AEEF'}} key={index}>{obj.title}</h1>
                                             ))}
                                         </div>
                                         <p style={{color: '#4E4D4D', fontWeight: '700', lineHeight:'30px', marginBottom: '0'}}>Навыки</p>
