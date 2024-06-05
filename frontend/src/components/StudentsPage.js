@@ -4,7 +4,6 @@ import axios from 'axios';
 import AuthContext from './AuthContext';
 import { jwtDecode } from 'jwt-decode';
 import { API_URL } from '..';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export class StudentsPage extends Component {
     constructor(props) {
