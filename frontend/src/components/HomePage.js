@@ -474,7 +474,9 @@ export class HomePage extends Component {
                                                     <div className="img" style={{height: "230px", backgroundImage: 'url(https://otkrytky.ru/o/img/0336/otrkytky-ru-109-cGluaW1nLmNvbQ.png)', backgroundPosition: "center", backgroundSize: "cover"}} alt=""></div>
                                                 </Link>
                                                 <div className="card-body fixed-size-card d-flex flex-column justify-content-between">
-                                                    {/* <input style={{width:'15px', height:'15px', border: '2px solid #888'}} type="checkbox" onChange={() => this.handleProjectSelect(project.id)} checked={this.state.selectedProjects.includes(project.id)} /> */}
+                                                    {/* {user && is_user && !is_user.is_student ? (
+                                                    <input style={{width:'15px', height:'15px', border: '2px solid #888'}} type="checkbox" onChange={() => this.handleProjectSelect(project.id)} checked={this.state.selectedProjects.includes(project.id)} />
+                                                    ) : null} */}
                                                     <div className="tag-container">
                                                         {project.tags.map((tag,index) => (
                                                             <p key={index} className="fs-16 lh-24 color-blue m-0" style={{padding: '2px'}}>{tag.tag}</p>
