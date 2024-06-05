@@ -1,9 +1,11 @@
 version: '3.8'
 
-# создаём сеть.
 networks:
-  my_network:
+  ds_network:
     driver: bridge
+    ipam:
+        config:
+            - subnet: 172.20.10.0/24
 
 services:
     postgres:
@@ -19,17 +21,8 @@ services:
             - 5432:5432
         restart: always
         networks:
-            - my_network
-
-    # pgadmin:
-    #     image: dpage/pgadmin4:6.12
-    #     ports:
-    #     - 5080:80
-    #     environment:
-    #     - PGADMIN_DEFAULT_EMAIL=admin@example.com
-    #     - PGADMIN_DEFAULT_PASSWORD=0000
-    #     volumes:
-    #     - pgadmin_data:/home/rundeck/server/data
+            ds_network:
+                ipv4_address: 172.20.10.20
 
     django: 
         build: ./django/
@@ -40,20 +33,8 @@ services:
         depends_on:
             - postgres
         networks:
-            - my_network
-        # environment:
-        # postgres
-            # - POSTGRES_USER=${DB_USER}
-            # - POSTGRES_DB=${DB_NAME}
-            # - POSTGRES_PASSWORD=${DB_PASSWORD}
-            # - POSTGRES_PORT=${DB_PORT}
-            # - POSTGRES_HOST=${DB_HOST}
-        # django
-            # - SECRET_KEY=${SECRET_KEY}
-            # - DEBUG=${DEBUG}
-            # - DJANGO_ALLOWED_HOSTS=${ALLOWED_HOSTS}
-            # - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-            # - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+            ds_network:
+                ipv4_address: 172.20.10.21
         env_file:
             - ./.env
 
@@ -69,7 +50,8 @@ services:
         depends_on:
             - django
         networks:
-            - my_network  
+            ds_network:
+                ipv4_address: 172.20.10.22 
     # nginx:
     #     image: nginx:latest
     #     volumes:
@@ -86,6 +68,4 @@ services:
 # создаём volume для статики
 volumes:
   postgres_volume:
-#   pgadmin_data:
 #   static_volume:
-
