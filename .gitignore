@@ -1,0 +1,6 @@
+.env
+./django/students/__pycache__
+./django/django_project/__pycache__
+./django/students/migrations/__pycache__
+
+./django/init_data.py
