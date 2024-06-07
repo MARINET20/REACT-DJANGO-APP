@@ -842,7 +842,8 @@ def grade_crete_view(request):
     for studentId in students:
         student = Student.objects.get(id=studentId)
         # добавление связи проекта и студентов
-        student_project = History_project.objects.create(project=project, student=student)
+        if projectName is not None:
+            student_project = History_project.objects.create(project=project, student=student)
 
         for skillObj in skills:
             if skillObj['id'] is not None:
