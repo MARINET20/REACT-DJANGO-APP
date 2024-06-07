@@ -21,10 +21,10 @@ ENV EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD
 ENV EMAIL_USE_SSL=$EMAIL_USE_SSL
 ENV EMAIL_BACKEND =$EMAIL_BACKEND
 
-CMD python manage.py migrate && \
-    python manage.py runserver 0.0.0.0:8000
+# CMD python manage.py migrate && \
+#     python manage.py runserver 0.0.0.0:8000
 
-# CMD python manage.py migrate \
-#     && python manage.py createsuperuser --no-input \
-#     && python manage.py runserver 0.0.0.0:8000
+CMD python manage.py migrate \
+    && python manage.py createsuperuser --no-input \
+    && python manage.py runserver 0.0.0.0:8000
 # ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
