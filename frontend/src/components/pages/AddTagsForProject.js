@@ -50,7 +50,7 @@ export class AddTagsForProject extends Component {
                             />
                     </div>
                     <div className="col">
-                        <span className="fs-16 lh-24" style={{ fontSize: '14px',cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.handleAddTag}>добавить</span>
+                        <span className="fs-16 lh-24" style={{ fontSize: '14px',cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.handleAddTag}>добавить тег</span>
                     </div>
                 </div>
                 <div className="row mt-2">

@@ -8,8 +8,10 @@ import 'bootstrap/dist/js/bootstrap.js';
 
 
 // поменять api django
-// export const API_URL = "http://127.0.0.1:8000/api"
-export const API_URL = "http://172.20.10.21:8000/api"
+export const API_URL = "http://127.0.0.1:8000/api"
+export const URL = "http://127.0.0.1:8000"
+// export const API_URL = "http://172.20.10.21:8000/api"
+// export const URL = "http://172.20.10.21:8000"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

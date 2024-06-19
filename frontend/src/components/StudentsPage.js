@@ -18,7 +18,9 @@ export class StudentsPage extends Component {
             selectedStudent: null,
 
             is_user:null,
-            skillStudent:[]
+            skillStudent:[],
+
+            avatarUrl: 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png',
         };
 
         this.setState = this.setState.bind(this); // привязываем this к методам
@@ -80,6 +82,7 @@ export class StudentsPage extends Component {
 
     const { is_user } = this.state;
 
+
     if ( !is_user) {
       return <div className='container'></div>
     }
@@ -129,7 +132,8 @@ export class StudentsPage extends Component {
                         }).map((student, index) => 
                         <div key={index} className="card_up col-12 col-sm-6 col-lg-3">
                             <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s" onClick={() => this.openModal(student)} style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
-                            <div className="advisor_thumb"><img width="261" height="230" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt=""/>
+                            <div className="advisor_thumb">
+                                <img width="261" height="230" src={student.photo ? student.photo : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'} alt="" />
                                 <div className="social-info" style={{fontStyle: 'normal', fontWeight: '400', fontSize: '.93375rem', lineHeight: '1.34875rem'}}>Статус: <span style={{color: 'rgb(104, 200, 122)'}}> Участник
                                     </span>
                                 </div>
@@ -152,7 +156,17 @@ export class StudentsPage extends Component {
                         }).map((student, index) => 
                         <div key={index} className="card_up col-12 col-sm-6 col-lg-3">
                             <div className="single_advisor_profile wow fadeInUp"  onClick={() => this.openModal(student)} data-wow-delay="0.3s" style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
-                            <div className="advisor_thumb"><img width="261" height="230" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt=""/>
+                            <div className="advisor_thumb">
+                                <img width="100%" 
+                                height="auto" 
+                                src={
+                                    student.photo
+                                    ? student.photo
+                                    : student.name.endsWith('а')
+                                        ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                        : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                }
+                                alt="" />
                                 {student.projects.length === 0 ? (
                                     <div className="social-info" style={{fontStyle: 'normal', fontWeight: '400', fontSize: '.93375rem', lineHeight: '1.34875rem'}}>Статус: <span style={{color: '#ef627d'}}> Не участник</span>
                                     </div>

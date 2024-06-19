@@ -4,6 +4,11 @@ import { API_URL } from '../..';
 import {
     useNavigate ,
 } from "react-router-dom";
+import { Radar } from 'react-chartjs-2';
+import { Chart, registerables } from 'chart.js';
+import RadarChart from './RadarChart';
+
+Chart.register(...registerables);
 
 export class SearchTeamLastPage extends Component {
     constructor(props) {
@@ -95,42 +100,71 @@ export class SearchTeamLastPage extends Component {
                 <div className="carousel-inner">
                     {this.state.teamsArray.map((teamInfo, index) => (
                         <div key={index} className={`carousel-item ${index === activeSlideIndex ? 'active' : ''}`}>
-                            <div className="d-flex justify-content-center mt-5">
+                            <div className='section news-detail mt-0'>
+                            <div className='left' style={{backgroundColor:'#fff'}}>
+                                <RadarChart labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)} />
+                            </div>
+                            <div className='right' >
+                                <div className="flex fl-column">
+                                    <div className='flex fl-column align-items-start'>
+                                        {teamInfo.studentIds.map((studentId, studentIndex) => {
+                                            const student = this.state.students.find(student => student.id === studentId);
+                                            return (
+                                                <div key={index} className="card_up" style={{width:'400px'}}>
+                                                    <div style={{width:'260px'}} className="single_advisor_profile wow fadeInUp" >
+                                                        <div className="advisor_thumb">
+                                                            <img width="100%" 
+                                                            height="auto" 
+                                                            src={
+                                                                student.photo
+                                                                ? student.photo
+                                                                : student.name.endsWith('а')
+                                                                    ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                                                    : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                                            }
+                                                            alt=""/>
+                                                        </div>
+                                                        <div style={{position: 'relative', zIndex: '1', padding: '30px', textAlign: 'right'}}>
+                                                            <h6>{student.name}</h6>
+                                                            <p>{student.direction}</p>
+                                                            <h6>{student.course} курс</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )   
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className="d-flex justify-content-center mt-5">
                             {teamInfo.studentIds.map((studentId, studentIndex) => {
                                 const student = this.state.students.find(student => student.id === studentId);
                                 return (
-                                    <div key={index} className="card_up col-12 col-sm-6 col-lg-3" >
+                                    <div key={index} className="card_up col-12 col-sm-6 col-lg-3 order-lg-2" >
                                         <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s" style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
-                                        <div className="advisor_thumb"><img width="261" height="230" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt=""/>
+                                        <div className="advisor_thumb">
+                                            <img width="200" 
+                                            height="200" 
+                                            src={
+                                                student.photo
+                                                ? student.photo
+                                                : student.name.endsWith('а')
+                                                    ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                                    : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                            }
+                                            alt=""/>
                                         </div>
                                         <div className="single_advisor_details_info" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{cursor:'pointer'}}>
                                             <h6>{student.name}</h6>
                                             <p className="designation">{student.direction}</p>
+                                            <h6 className="designation">{student.course} курс</h6>
                                         </div>
                                         </div>
                                     </div>
                                 )   
                             })}
+                            </div> */}
                             </div>
-
-                            {teamInfo.skillIds.map((skillId, skillIndex) => {
-                                const skill = this.state.skills.find(skill => skill.id === skillId);
-                                let score = teamInfo.score[skillId];
-                                if (score >= 2 && score <= 5) {
-                                    score = (score - 1) * 25; // Преобразование в проценты (2 = 25%, 3 = 50%, 4 = 75%, 5 = 100%)
-                                } else {
-                                    score = 0;
-                                }
-                                const value = score
-                                return (
-                                    <div key={skillIndex}>
-                                        <p style={{fontWeight: '600', padding:'5px'}}>{skill.skill}: {value}%</p>
-                                        <CProgress height={30} >
-                                            <CProgressBar value={value} color="dark" variant="striped"/>
-                                        </CProgress>
-                                    </div> 
-                                );
-                            })}
                         </div>
                     ))}
                 </div>
@@ -142,7 +176,7 @@ export class SearchTeamLastPage extends Component {
                 </button>
             </div>
             <button
-                className="btn-next mt-3"
+                className="btn-next mt-5"
                 onClick={this.handleSelectTeam}
             >Выбрать&nbsp;команду</button>
         </div>)}

@@ -52,7 +52,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         depth = 1
-        fields = ['id', 'name', 'direction', 'course', 'is_study', 'projects', 'skills', 'selected_projects']
+        fields = ['id', 'name', 'direction', 'course', 'is_study', 'photo', 'projects', 'skills', 'selected_projects']
 
     def get_projects(self, obj):
         projects = Project.objects.filter(student=obj, status=False)
@@ -69,6 +69,7 @@ class StudentSerializer(serializers.ModelSerializer):
             project_data = {
                 'id': project.id,
                 'name': project.title,
+                'status': project.status,
             }
             selected_project_data = SelectedProjectSerializer(selected_project).data
             selected_project_data['project'] = project_data
@@ -146,21 +147,13 @@ class TeacherSerializer(serializers.ModelSerializer):
     user = UsersSerializer()
     class Meta:
         model = Teacher
-        fields =  ['id', 'name', 'user']
+        fields =  ['id', 'name', 'user', 'photo']
 
 
 class TeacherSerializerId(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields =  ['id']
-
-
-# class ProjectTeacherSerializer(serializers.ModelSerializer):
-#     project = ProjectSerializer()
-#     teacher = TeacherSerializer()
-#     class Meta:
-#         model = Project_details
-#         fields = ['project', 'teacher']
 
 class DisciplineSerializer(serializers.ModelSerializer):
     class Meta:

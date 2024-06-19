@@ -3,6 +3,7 @@ import re
 from .serializers import *
 from .models import *
 from .policies import *
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status, permissions, viewsets
 from rest_framework.decorators import api_view
@@ -26,6 +27,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth import get_user_model
+from sklearn.preprocessing import MinMaxScaler
 
 #новое
 import os
@@ -260,53 +262,47 @@ def user_profile(request, pk):
         user = User.objects.get(id=pk)
         if user.is_student:
             student = Student.objects.get(user=user)
+            serializer = StudentSerializer(student)  # Создаем экземпляр сериализатора с объектом Student
             data = {
                 'is_staff' : user.is_staff,
                 'is_student' : user.is_student,
                 'is_teacher' : user.is_teacher,
                 'email': user.email,
-                'user_info': {
-                    'id': student.id,
-                    'name': student.name,
-                    'direction': student.direction,
-                    'course': student.course,
-                    'is_study': student.is_study,
-                    'projects': [
-                        {
-                            'id': project.id,
-                            'title': project.title,
-                            'status': project.status,
-                        }
-                        for project in student.projects.all()
-                    ],
-                    'skills': [
-                        {
-                            'id': skill.id,
-                            'skill': skill.skill,
-                        }
-                        for skill in student.skills.all()
-                    ],
-                    'selected_projects': [
-                        {
-                            'id': selected_project.project_id,
-                            'title': Project.objects.get(id=selected_project.project_id).title,
-                            'status': Project.objects.get(id=selected_project.project_id).status,
-                        }
-                        for selected_project in SelectedProject.objects.filter(student=student)
-                    ]
-                }
+                'user_info': serializer.data,
+                'projects': [
+                    {
+                        'id': project.id,
+                        'title': project.title,
+                        'status': project.status,
+                    }
+                    for project in student.projects.all()
+                ],
+                'skills': [
+                    {
+                        'id': skill.id,
+                        'skill': skill.skill,
+                    }
+                    for skill in student.skills.all()
+                ],
+                'selected_projects': [
+                    {
+                        'id': selected_project.project_id,
+                        'title': Project.objects.get(id=selected_project.project_id).title,
+                        'status': Project.objects.get(id=selected_project.project_id).status,
+                    }
+                    for selected_project in SelectedProject.objects.filter(student=student)
+                ]
             }
         elif user.is_teacher:
             teacher = Teacher.objects.get(user=user)
+            serializer = TeacherSerializer(teacher)
             data = {
                 'is_staff' : user.is_staff,
                 'is_student' : user.is_student,
                 'is_teacher' : user.is_teacher,
                 'email': user.email,
-                'user_info': {
-                    'id': teacher.id,
-                    'name': teacher.name,
-                    'projects': [
+                'user_info': serializer.data,
+                'projects': [
                         {
                             'id': project.id,
                             'title': project.title,
@@ -314,7 +310,6 @@ def user_profile(request, pk):
                         }
                         for project in teacher.projects.all()
                     ],
-                }
             }
         elif user.is_staff:
             data = {
@@ -327,6 +322,21 @@ def user_profile(request, pk):
     except User.DoesNotExist:
         return Response({'error': 'Пользователь не найден'}, status=status.HTTP_404_NOT_FOUND)
 
+# загрузка аватар для пользователя
+class AvatarUploadView(APIView):
+    def post(self, request):
+        if 'photo' in request.FILES:
+            try:
+                user = User.objects.get(id=request.user.id)
+                user_profile = Student.objects.get(user=user)
+            except (User.DoesNotExist, Student.DoesNotExist):
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            
+            user_profile.photo = request.FILES['photo']
+            user_profile.save()
+            avatar_url = request.build_absolute_uri(user_profile.photo.url)
+            return Response({'avatarUrl': avatar_url})
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def add_team_db(request):
@@ -533,7 +543,7 @@ def get_students(request):
 
     return df_nodes    
 
-# получаем список студентов с их тегами и весами
+# получаем список студентов с их тегами и весами (оценками)
 def create_edges_json_file(request, direction, course):
     # Получаем список открытых проектов (status=False)
     open_projects = Project.objects.filter(status=False)
@@ -550,14 +560,27 @@ def create_edges_json_file(request, direction, course):
 
     df_test_stud_skills = Skills_students.objects.filter(student_id__in=students_in_course_and_direction).values('student_id', 'skill_id').annotate(score=Avg('score'))
 
+    # Создаем DataFrame из данных
+    df = pd.DataFrame(list(df_test_stud_skills))
+    # Нормализуем значения в столбце "score"
+    scaler = MinMaxScaler()
+    df['score_normalized'] = scaler.fit_transform(df[['score']])
     # Преобразуем данные в формат JSON
     edges_data = []
-    for entry in df_test_stud_skills:
+    for index, row in df.iterrows():
         edges_data.append({
-            'Source': entry['student_id'],
-            'Target': entry['skill_id'],
-            'Weight': entry['score']
+            'Source': row['student_id'],
+            'Target': row['skill_id'],
+            'Weight': row['score_normalized']
         })
+    # # Преобразуем данные в формат JSON
+    # edges_data = []
+    # for entry in df_test_stud_skills:
+    #     edges_data.append({
+    #         'Source': entry['student_id'],
+    #         'Target': entry['skill_id'],
+    #         'Weight': entry['score']
+    #     })
     return edges_data
 
 # получение данных о студентах
@@ -658,12 +681,26 @@ def search_team(request):
 
     edges_file = create_edges_json_file(request, direction=direction, course=course)
 
-    test_proj_skills_file = list(Skills_weight.objects.filter(project_id=project_id).values
-                               (id=F('skill_id'), coef=F('weight_skill')))
-    
+    # test_proj_skills_file = list(Skills_weight.objects.filter(project_id=project_id).values
+    #                            (id=F('skill_id'), coef=F('weight_skill')))
+    test_proj_skills_data = list(Skills_weight.objects.filter(project_id=project_id).values
+                                 (id=F('skill_id'), coef=F('weight_skill')))
+    X = np.array([entry['coef'] for entry in test_proj_skills_data]).reshape(-1, 1)
+
+    scaler = MinMaxScaler()
+    X_normalized = scaler.fit_transform(X)
+
+    normalized_data = []
+    for i, entry in enumerate(test_proj_skills_data):
+        normalized_coef = X_normalized[i][0]
+        normalized_data.append({
+            'id': entry['id'],
+            'coef': normalized_coef
+        })
+        
     students_file = create_students_json_file(request, direction=direction, course=course)
 
-    result = find_the_best_team(test_proj_skills_file, students_file, json_file, edges_file)
+    result = find_the_best_team(normalized_data, students_file, json_file, edges_file)
 
     # отправляем полученный массив в метод, который получает по id студентов и их оценки по требуемым тегам
     students_data = get_students_score(request, result, project_id)
@@ -860,6 +897,9 @@ def grade_crete_view(request):
             except Skills_students.DoesNotExist:  # Если записи такой нет, то создаем 
                 studentSkill = Skills_students.objects.create(student=student, skill=skill, discipline=discipline, score=score)
                 studentSkill.save()
+
+            if projectName is not None:
+                skill_project = Skills_weight.objects.create(project=project, skill=skill, weight_skill = 1.0)
     return Response({'message': 'Оценки успешно добавлены!'}, status=status.HTTP_201_CREATED)
     # else:
     #     return Response({'error': 'Заполните все поля!'}, status=status.HTTP_400_BAD_REQUEST)

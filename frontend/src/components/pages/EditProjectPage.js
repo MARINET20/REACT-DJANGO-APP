@@ -138,6 +138,8 @@ export class EditProjectPage extends Component {
         formData.status = this.state.isProjectCompleted;
         this.setState({ formData });
 
+        console.log(this.state.formData);
+
         try {
           const response = await fetch(`${API_URL}/edit/project`, {
               method: 'POST',
@@ -304,31 +306,52 @@ export class EditProjectPage extends Component {
                         <label style={{fontWeight:'600'}}>
                             Требования проекта:
                             {this.state.selectedProject && this.state.selectedProject.skills.length > 0 ? (
-                                <ul>
-                                    {this.state.selectedProject.skills.map(req => (
-                                        <li key={req.id} style={{marginBottom: '10px', fontWeight:'400'}}>
-                                            {req.skill} - уровень значимости:
-                                            <div>
-                                            {[...Array(10)].map((_, index) => (
-                                                <svg key={index} xmlns="http://www.w3.org/2000/svg" width="15" height="15" style={{fill: index < Math.round(req.weight_skill * 10) ? '#f0c313' : '#b9b9b9', margin: '3px 1px', cursor: 'pointer', marginLeft: '10px'}} onClick={() => this.updateWeight(req.id, (index + 1) / 10)}>
-                                                    <path d="M7.5 0l2.3 4.6h4.7l-3.4 3.3 1.2 6.6-6-3.4-6 3.4 1.3-6.6-3.4-3.3h4.6z"/>
-                                                </svg>
+                             <div className="row row-cols-1 row-cols-md-3 g-4">
+                                {this.state.selectedProject.skills.map(req => (
+                                    <div key={req.id} style={{marginBottom: '10px', fontWeight:'400'}}>
+                                        <span style={{fontWeight:'600'}}>{req.skill}</span><span>-уровень значимости:</span>
+                                        <div>
+                                            {[1, 2, 3, 4, 5].map((num) => (
+                                                <span 
+                                                    key={num}
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        backgroundColor: num === Math.round(parseFloat(req.weight_skill) * 5) ? '#D5E6ED' : '#fff',
+                                                        borderColor: num === Math.round(parseFloat(req.weight_skill) * 5) ? '#00abed' : '#cccccc',
+                                                        borderWidth: '1px',
+                                                        borderStyle: 'solid',
+                                                        color: num === Math.round(parseFloat(req.weight_skill) * 5) ? '#00abed' : '#000',
+                                                        padding: '15px',
+                                                        margin: '3px 1px',
+                                                        cursor: 'pointer',
+                                                        borderRadius: '5px'
+                                                    }}
+                                                    onClick={() => this.updateWeight(req.id, num / 5)}
+                                                >
+                                                    {num}
+                                                </span>
                                             ))}
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0,0,300,150"
-                                                style={{fill:"#ef627d", marginBottom:'10px', marginLeft:'10px', cursor:'pointer'}} onClick={() => this.removeRequirement(req.id)}  >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="25"
+                                                height="25"
+                                                viewBox="0,0,300,150"
+                                                style={{fill:"#ef627d", marginBottom:'10px', marginLeft:'10px', cursor:'pointer'}}
+                                                onClick={() => this.removeRequirement(req.id)}
+                                            >
                                                 <g fill="#ef627d" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{mixBlendMode: "normal"}}>
-                                                <g transform="scale(10.66667,10.66667)">
-                                                    <path d="M4.99023,3.99023c-0.40692,0.00011 -0.77321,0.24676 -0.92633,0.62377c-0.15312,0.37701 -0.06255,0.80921 0.22907,1.09303l6.29297,6.29297l-6.29297,6.29297c-0.26124,0.25082 -0.36647,0.62327 -0.27511,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27511l6.29297,-6.29297l6.29297,6.29297c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-6.29297,-6.29297l6.29297,-6.29297c0.25082,-0.26124 0.36648,-0.62327 0.27512,-0.97371c-0.09136,-0.35044 -0.36503,-0.62411 -0.71547,-0.71547c-0.35045,-0.09136 -0.72289,0.01388 -0.97371,0.27511l-6.29297,6.29297l-6.29297,-6.29297c-0.25852,-0.29831 -0.69317,-0.35115 -0.9929,-0.09205c-0.29972,0.2591 -0.35116,0.69378 -0.09205,0.99351c0.09461,0.10954 0.23421,0.19187 0.39324,0.23504z"></path>
-                                                </g>
+                                                    <g transform="scale(10.66667,10.66667)">
+                                                        <path d="M4.99023,3.99023c-0.40692,0.00011 -0.77321,0.24676 -0.92633,0.62377c-0.15312,0.37701 -0.06255,0.80921 0.22907,1.09303l6.29297,6.29297l-6.29297,6.29297c-0.26124,0.25082 -0.36647,0.62327 -0.27511,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27511l6.29297,-6.29297l6.29297,6.29297c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-6.29297,-6.29297l6.29297,-6.29297c0.25082,-0.26124 0.36648,-0.62327 0.27512,-0.97371c-0.09136,-0.35044 -0.36503,-0.62411 -0.71547,-0.71547c-0.35045,-0.09136 -0.72289,0.01388 -0.97371,0.27511l-6.29297,6.29297l-6.29297,-6.29297c-0.25852,-0.29831 -0.69317,-0.35115 -0.9929,-0.09205c-0.29972,0.2591 -0.35116,0.69378 -0.09205,0.99351c0.09461,0.10954 0.23421,0.19187 0.39324,0.23504z"></path>
+                                                    </g>
                                                 </g>
                                             </svg>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                null
-                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            null
+                        )}
                         </label>
                         </div>
                     </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import AuthContext from './AuthContext'
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { API_URL } from '..';
+import { API_URL, URL } from '..';
 import {
   useNavigate
 } from "react-router-dom";
@@ -25,8 +25,25 @@ export class Profile extends Component {
         project_id: null,
         user_id: null
       },
+      avatarUrl: 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png',
     };
-    
+    this.handleAvatarChange = this.handleAvatarChange.bind(this);
+  }
+
+  handleAvatarChange(e) {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    axios.post(`${API_URL}/upload-avatar`, formData)
+      .then((response) => {
+        const newAvatarUrl = response.data.avatarUrl;
+        this.setState({ avatarUrl: newAvatarUrl });
+      })
+      .catch((error) => {
+        console.error('Ошибка в загрузке аватара', error);
+        alert('Ошибка в загрузке аватара');
+      });
   }
 
   handleSkillClick() {
@@ -59,7 +76,7 @@ export class Profile extends Component {
       const decodedUser = jwtDecode(authTokens.access);
       try {
         let userResponse = await axios.get(`${API_URL}/user/${decodedUser.user_id}`)
-        this.setState({ is_user: userResponse.data, is_staff: userResponse.data.is_staff, is_student: userResponse.data.is_student, user_info: userResponse.data.user_info});
+        this.setState({ is_user: userResponse.data, is_staff: userResponse.data.is_staff, is_student: userResponse.data.is_student, user_info: userResponse.data.user_info, avatarUrl: userResponse.data.user_info.photo});
       } catch (error) {
         console.error('Ошибка при получении пользовательских данных:', error);
       }
@@ -105,6 +122,14 @@ export class Profile extends Component {
       <div></div>
     }
 
+    // let imageUrl = ''; // заменим const на let, так как значение будет изменяться
+
+    // if (is_user?.user_info.name.endsWith('а')) {
+    //   imageUrl = 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+    // } else {
+    //   imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'; // исправляем строку с imageUrl
+    // }
+    const imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png';
     return (
         <AuthContext.Consumer>
         {({ user, logoutUser }) => (
@@ -113,7 +138,9 @@ export class Profile extends Component {
               <div>
                 <div className='d-flex justify-content-between '>
                   <div className='pt-30 '>
-                    <h1 className=" m-0" style={{color: '#00AEEF'}}>Личный кабинет</h1>  
+                    <h1 className=" m-0" style={{color: '#00AEEF'}}>
+                      {is_student ? 'Личный кабинет студента ' : 'Личный кабинет преподавателя'}
+                    </h1>  
                   </div>
                   <div className='logout-line mt-4' onClick={logoutUser} style={{cursor:'pointer'}}>
                     <div className='logout-container'>
@@ -129,10 +156,12 @@ export class Profile extends Component {
                         <div className="profile profile-wrapper">
                         <div className="profile__content">
                           <div className="profile__content--left">
-                            <div className="profile__avatar" style={{backgroundImage: "url(https://rsv.ru/account/img/placeHolder-m.4c1254a5.png)"}}></div>
+                            <input type="file" accept="image/*" onChange={this.handleAvatarChange} hidden />
+                            <div className="profile__avatar" style={{ backgroundImage: `url(${imageUrl})`, cursor:'pointer' }} onClick={() => document.querySelector('input[type="file"]').click()}>
+                            </div>
                           </div>
                           <div className="profile__content--right">
-                            <div  className="profile__user-id" style={{color:'#00abed'}}>{is_user?.email}</div>
+                            {/* <div  className="profile__user-id" style={{color:'#00abed'}}>{is_user?.email}</div> */}
                               <div  className="profile__title">{ is_user?.user_info.name}</div>
                               {is_student ? (
                                 <div>
@@ -183,15 +212,18 @@ export class Profile extends Component {
                           </div>
                         </div>
                       </div>
-                      {is_user?.user_info.projects ? ( 
+                      {is_user?.projects ? ( 
                         <div className="">
-                          {is_user?.user_info.projects
+                          <div>
+                            Количество проектов: {is_user?.projects.filter(project => project.status === this.state.isProjectCompleted).length}
+                          </div> 
+                          {is_user?.projects
                             .filter(project => project.status === this.state.isProjectCompleted) 
                             .map((project, index) =>
                             <div className="flex justify-content-center">
                             <a href={`/project/${project.id}`} key={index} className='flex tabs-card__body-card one-card card_up' style={{cursor: 'pointer', textDecoration:'none'}}>
                               <div className='tabs-card__body-card-top-img'>
-                                <img src="https://otkrytky.ru/o/img/0336/otrkytky-ru-109-cGluaW1nLmNvbQ.png" alt="Photo" 
+                                <img src="https://otkrytky.ru/o/img/0336/otrkytky-ru-109-cGluaW1nLmNvbQ.png" alt="картинка проекта" 
                                 style={{maxWidth: '100%',fontStyle: 'italic', verticalAlign: 'middle'}}/>
                               </div>
                               <div className=''>
@@ -200,7 +232,7 @@ export class Profile extends Component {
                             </a>
                             </div>
                           )}
-                          { is_user?.user_info.projects.filter(project => project.status === this.state.isProjectCompleted).length === 0 && (
+                          {is_user?.projects.filter(project => project.status === this.state.isProjectCompleted).length === 0 && (
                             <div className="flex justify-content-center">
                               <div className='flex'>
                                 <img width="60" height="60" src="https://img.icons8.com/pulsar-line/96/4e4d4d/oops.png" alt="oops"/>  
@@ -211,6 +243,7 @@ export class Profile extends Component {
                               </div>
                             </div>
                           )}
+                          
                         </div>
                       ) : ( 
                         <div className="flex justify-content-center">
@@ -229,35 +262,37 @@ export class Profile extends Component {
                       <div className='profile__content'>
                         <h3 className="profile__title">Избранные проекты</h3>
                       </div>
-                      {is_user?.user_info.selected_projects.filter(project => project.status === false).length > 0 && 
-                        is_user?.user_info.selected_projects.map((project, index) => (
-                          <div className="d-flex justify-content-between" key={index}>
-                            <a href={`/project/${project.id}`}  className='flex tabs-card__body-card one-card card_up' style={{cursor: 'pointer', textDecoration:'none'}}>
-                              <div className='tabs-card__body-card-top-img'>
-                                <img src="https://otkrytky.ru/o/img/0336/otrkytky-ru-109-cGluaW1nLmNvbQ.png" alt="Photo" 
-                                style={{maxWidth: '100%',fontStyle: 'italic', verticalAlign: 'middle'}}/>
-                              </div>
-                              <div className=''>
-                                  {/* <div className="social-info" style={{fontStyle: 'normal', fontWeight: '400', fontSize: '.93375rem', lineHeight: '1.34875rem'}}>Статус: <span style={{color: 'rgb(104, 200, 122)'}}> Участник
-                                    </span>
-                                  </div> */}
-                                  <h4  className="tabs-card__body-card-top-info-title">{project.title}</h4>
-                              </div>
-                              <div style={{marginLeft:'200px'}}  onClick={() => this.handleApplication(user.user_id, project.id)}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0,0,300,150"
-                                  style={{fill:"#ef627d"}}>
-                                  <g fill="#ef627d" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{mixBlendMode: "normal"}}>
-                                    <g transform="scale(10.66667,10.66667)">
-                                      <path d="M4.99023,3.99023c-0.40692,0.00011 -0.77321,0.24676 -0.92633,0.62377c-0.15312,0.37701 -0.06255,0.80921 0.22907,1.09303l6.29297,6.29297l-6.29297,6.29297c-0.26124,0.25082 -0.36647,0.62327 -0.27511,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27511l6.29297,-6.29297l6.29297,6.29297c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-6.29297,-6.29297l6.29297,-6.29297c0.29576,-0.28749 0.38469,-0.72707 0.22393,-1.10691c-0.16075,-0.37985 -0.53821,-0.62204 -0.9505,-0.60988c-0.2598,0.00774 -0.50638,0.11632 -0.6875,0.30273l-6.29297,6.29297l-6.29297,-6.29297c-0.18827,-0.19353 -0.4468,-0.30272 -0.7168,-0.30273z">
-                                      </path>
+                      <div>
+                        Количество проектов: {is_user?.selected_projects.filter(project => project.status === false).length}
+                      </div>
+                      {is_user?.selected_projects.filter(project => project.status === false).length > 0 && 
+                        is_user?.selected_projects.map((project, index) => (
+                          <div>
+                            <div className="d-flex justify-content-between" key={index}>
+                              <a href={`/project/${project.id}`}  className='flex tabs-card__body-card one-card card_up' style={{cursor: 'pointer', textDecoration:'none'}}>
+                                <div className='tabs-card__body-card-top-img'>
+                                  <img src="https://otkrytky.ru/o/img/0336/otrkytky-ru-109-cGluaW1nLmNvbQ.png" alt="картинка проекта" 
+                                  style={{maxWidth: '100%',fontStyle: 'italic', verticalAlign: 'middle'}}/>
+                                </div>
+                                <div className=''>
+                                    <h4  className="tabs-card__body-card-top-info-title">{project.title}</h4>
+                                </div>
+                                <div style={{marginLeft:'200px'}}  onClick={() => this.handleApplication(user.user_id, project.id)}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0,0,300,150"
+                                    style={{fill:"#ef627d"}}>
+                                    <g fill="#ef627d" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" strokeMiterlimit="10" strokeDasharray="" strokeDashoffset="0" fontFamily="none" fontWeight="none" fontSize="none" textAnchor="none" style={{mixBlendMode: "normal"}}>
+                                      <g transform="scale(10.66667,10.66667)">
+                                        <path d="M4.99023,3.99023c-0.40692,0.00011 -0.77321,0.24676 -0.92633,0.62377c-0.15312,0.37701 -0.06255,0.80921 0.22907,1.09303l6.29297,6.29297l-6.29297,6.29297c-0.26124,0.25082 -0.36647,0.62327 -0.27511,0.97371c0.09136,0.35044 0.36503,0.62411 0.71547,0.71547c0.35044,0.09136 0.72289,-0.01388 0.97371,-0.27511l6.29297,-6.29297l6.29297,6.29297c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-6.29297,-6.29297l6.29297,-6.29297c0.29576,-0.28749 0.38469,-0.72707 0.22393,-1.10691c-0.16075,-0.37985 -0.53821,-0.62204 -0.9505,-0.60988c-0.2598,0.00774 -0.50638,0.11632 -0.6875,0.30273l-6.29297,6.29297l-6.29297,-6.29297c-0.18827,-0.19353 -0.4468,-0.30272 -0.7168,-0.30273z">
+                                        </path>
+                                      </g>
                                     </g>
-                                  </g>
-                                </svg>
-                              </div>
-                            </a>
+                                  </svg>
+                                </div>
+                              </a>
+                            </div>
                           </div>
                         ))} 
-                        {!is_user || is_user.user_info.selected_projects.filter(project => project.status === false).length === 0 && (
+                        {(!is_user || is_user.selected_projects.filter(project => project.status === false).length === 0) && (
                           <div className="flex justify-content-center">
                             <div className='flex'>
                               <img width="60" height="60" src="https://img.icons8.com/pulsar-line/96/4e4d4d/oops.png" alt="oops"/>  

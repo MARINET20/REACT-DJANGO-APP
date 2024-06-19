@@ -407,7 +407,7 @@ export class HomePage extends Component {
                                                     <p key={index} className="fs-16 lh-24 color-blue m-0" style={{padding: '2px'}}>{tag}</p>
                                                 ))}
                                             </div>
-                                            <h4 className='card-title'>{project.title}</h4>
+                                            <h4 className='card-title'>{project.title.length > 100 ? project.title.slice(0, 100) + '...' : project.title}</h4>
                                             <div className=' border-top-grey'></div>
                                             <div className='flex card-text'>
                                                 <img width="80" height="80" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt="user-male-circle--v1"/>
@@ -438,7 +438,7 @@ export class HomePage extends Component {
                                                             <p key={index} className="fs-16 lh-24 color-blue m-0" style={{padding: '2px'}}>{tag.tag}</p>
                                                         ))}
                                                     </div>
-                                                    <h4 className='card-title' style={{color: '#4E4D4D', fontWeight: '700', fontSize: '24px', lineHeight:'32px', marginTop: '8'}}>{project.title}</h4>
+                                                    <h4 className='card-title' style={{color: '#4E4D4D', fontWeight: '700', fontSize: '24px', lineHeight:'32px', marginTop: '8'}}>{project.title.length > 100 ? project.title.slice(0, 100) + '...' : project.title}</h4>
                                                     <div className='border-top-home'></div>
                                                     <div className='flex card-text'>
                                                         <img width="80" height="80" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt="user-male-circle--v1"/>
@@ -482,7 +482,7 @@ export class HomePage extends Component {
                                                             <p key={index} className="fs-16 lh-24 color-blue m-0" style={{padding: '2px'}}>{tag.tag}</p>
                                                         ))}
                                                     </div>
-                                                    <h4 className='card-title' style={{color: '#4E4D4D', fontWeight: '700', fontSize: '24px', lineHeight:'32px', marginTop: '8'}}>{project.title}</h4>
+                                                    <h4 className='card-title' style={{color: '#4E4D4D', fontWeight: '700', fontSize: '24px', lineHeight:'32px', marginTop: '8'}}>{project.title.length > 100 ? project.title.slice(0, 100) + '...' : project.title}</h4>
                                                     <div className='border-top-home'></div>
                                                     <div className='flex card-text'>
                                                         <img width="80" height="80" src="https://rsv.ru/account/img/placeHolder-m.4c1254a5.png" alt="user-male-circle--v1"/>

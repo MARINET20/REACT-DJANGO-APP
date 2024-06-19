@@ -10,7 +10,7 @@ const ProjectPage = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [is_user, setIsUser] = useState(null);
-
+  const [showFullTitle, setShowFullTitle] = useState(false);
 
   
   useEffect(() => {
@@ -45,13 +45,17 @@ const ProjectPage = () => {
     return <div></div>;
   }
 
+  const handleClick = () => {
+    setShowFullTitle(!showFullTitle);
+  };
+
   return (
     <AuthContext.Consumer>
        {({ user }) => (
         <div>
           <div className='container'>
-            <div className='pt-30' style={{color: '#00AEEF'}} >
-                <h1>{project.title}</h1>
+            <div className='pt-30' style={{color: '#00AEEF', cursor:'pointer'}} onClick={handleClick}>
+              <h1>{showFullTitle ? project.title : project.title.length > 10 ? project.title.slice(0, 10) + '...' : project.title}</h1>
             </div>
           </div>
           <div className='container mt-3'>
@@ -73,19 +77,58 @@ const ProjectPage = () => {
                   <p className='border-top'></p>
                   <p className='color-deep-grey'>Требование к участникам</p>
                   <div>
+                      {project.skills
+                          .sort((a, b) => b.weight_skill - a.weight_skill)
+                          .reduce((acc, req) => {
+                              const existingReq = acc.find(item => item.weight_skill === req.weight_skill);
+                              if (existingReq) {
+                                  existingReq.skills.push(req.skill);
+                              } else {
+                                  acc.push({ weight_skill: req.weight_skill, skills: [req.skill] });
+                              }
+                              return acc;
+                          }, [])
+                          .map((group, index) => (
+                              <div key={index} style={{ marginBottom: '10px', fontWeight: '600' }}>
+                                  {group.skills.join(', ')} :
+                                  <span>
+                                      {[...Array(5)].map((_, index) => (
+                                          <svg
+                                              key={index}
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="15"
+                                              height="15"
+                                              style={{
+                                                  fill: index < Math.round(parseFloat(group.weight_skill) * 5) ? '#f0c313' : '#b9b9b9',
+                                                  margin: '3px 1px',
+                                                  cursor: 'pointer',
+                                                  marginLeft: '10px'
+                                              }}
+                                          >
+                                              <path d="M7.5 0l2.3 4.6h4.7l-3.4 3.3 1.2 6.6-6-3.4-6 3.4 1.3-6.6-3.4-3.3h4.6z" />
+                                          </svg>
+                                      ))}
+                                  </span>
+                              </div>
+                          ))}
+                  </div>
+                  {/* <div>
                     {project.skills.sort((a, b) => b.weight_skill - a.weight_skill).map((req, index) => (
                           <div key={index} style={{marginBottom: '10px', fontWeight:'600'}}>
                               {req.skill} :
                               <span>
-                              {[...Array(10)].map((_, index) => (
-                                  <svg key={index} xmlns="http://www.w3.org/2000/svg" width="15" height="15" style={{fill: index < Math.round(req.weight_skill * 10) ? '#f0c313' : '#b9b9b9', margin: '3px 1px', cursor: 'pointer', marginLeft: '10px'}}>
+                              {[...Array(5)].map((_, index) => (
+                                  <svg key={index} xmlns="http://www.w3.org/2000/svg" 
+                                  width="15" 
+                                  height="15" 
+                                  style={{fill: index < Math.round(parseFloat(req.weight_skill) * 5) ? '#f0c313' : '#b9b9b9', margin: '3px 1px', cursor: 'pointer', marginLeft: '10px'}}>
                                       <path d="M7.5 0l2.3 4.6h4.7l-3.4 3.3 1.2 6.6-6-3.4-6 3.4 1.3-6.6-3.4-3.3h4.6z"/>
                                   </svg>
                               ))}
                               </span>
                           </div>
                       ))}
-                  </div>
+                  </div> */}
                 </div>
                 <div className='right right-block-bg-white'>
                   <div>
@@ -102,7 +145,16 @@ const ProjectPage = () => {
                     <div className='flex fl-column align-items-start'>
                       {project.teachers.map((teacher, index) => (
                         <div className='d-flex justify-content-between'>
-                          <img src='https://rsv.ru/account/img/placeHolder-m.4c1254a5.png' alt='' className='prew-user-photo'></img>
+                          <img 
+                          src={
+                            teacher.photo
+                            ? teacher.photo
+                            : teacher.name.endsWith('а')
+                                ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                          }
+                          alt='' 
+                          className='prew-user-photo'/>
                           <div>
                             <h5 className='fw-700 sf-20 lh-30 mt-2' key={index}>{teacher.name}</h5>
                             <p style={{color:'#ffff', background:'#00abed', padding: '7px 10px', borderRadius: '50px', marginLeft:'5px', alignItems: 'center', display: 'inline-flex'}}>Куратор</p>
@@ -112,7 +164,16 @@ const ProjectPage = () => {
                       <h5 className="color-gray"> Команда проекта</h5>
                       {project.students.map((student) => (
                         <div className='d-flex justify-content-between'>
-                          <img src='https://rsv.ru/account/img/placeHolder-m.4c1254a5.png' alt='' className='prew-user-photo'></img>
+                          <img 
+                          src={
+                            student.photo
+                            ? student.photo
+                            : student.name.endsWith('а')
+                                ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                          }
+                          alt='' 
+                          className='prew-user-photo'/>
                           <div style={{width: '200px'}}>
                             <h5 className="fs-20 lh-24 color-blue mt-3">{student.name}</h5>
                             <p className="fs-20 lh-24 mt-3" style={{color:'#212529'}}>{student.direction}</p>

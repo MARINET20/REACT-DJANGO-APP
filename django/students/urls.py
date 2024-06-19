@@ -41,6 +41,8 @@ urlpatterns = [
     path('project/tag', ProjectTagsView.as_view(), name='tag'),
     path('tags', TagDetailView.as_view(), name='all-tags'),
     path('edit/project', edit_project, name=''),
+
+    path('upload-avatar', AvatarUploadView.as_view(), name='upload-avatar'),
     
     path('create/student', create_users),
     path('addUser', add_user, name=''),

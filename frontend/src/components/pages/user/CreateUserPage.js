@@ -155,7 +155,7 @@ export class CreateUserPage extends Component {
     return (
         <div className='container'>
             <div className='pt-30 d-flex mt-3 justify-content-between'>
-                <h1 className=" m-0">Добавление пользователя</h1>  
+                <h1 className=" m-0"  style={{color: '#00AEEF'}}>Добавление пользователя</h1>  
                 <div>
                     <button className="update-file" onClick={() => this.fileInput.click()}>
                         <img width="24" height="24" src="https://img.icons8.com/pastel-glyph/64/FFFFFF/upload--v1.png" alt="upload--v1"/>

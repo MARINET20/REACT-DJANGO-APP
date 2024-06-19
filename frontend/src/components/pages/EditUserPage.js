@@ -203,7 +203,7 @@ export class EditUserPage extends Component {
         return (
             <div className='container'>
                 <div className='pt-30'>
-                    <h1 className="m-0">Редактировать пользователя</h1>
+                    <h1 className="m-0" style={{color: '#00AEEF'}}>Редактировать пользователя</h1>
                 </div>
                 <div className="row mt-4">
                     <div className="col">

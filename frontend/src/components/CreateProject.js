@@ -189,10 +189,10 @@ export class CreateProject extends Component {
                     <div className='container'>
                         <div className='pt-30 d-flex mt-3 justify-content-between'>
                             <h1 className=" m-0" style={{color: '#00AEEF'}}>Создать проект</h1>  
-                            <label>
+                            {/* <label>
                                 <span style={{color:'#b3b3b3'}}>Добавить сторонний проект</span>
                                 <input type="checkbox" style={{marginLeft:'5px'}} onChange={this.handleChecked}/>
-                            </label>
+                            </label> */}
                         </div>
                         {this.state.isChecked ? ( 
                             <div>
@@ -271,7 +271,7 @@ export class CreateProject extends Component {
                                 <label className="form-label" style={{fontWeight:'600'}}>Требования</label>
                                     <RequirementList/>
                             </div>
-                            <button className="btn btn-primary btn-sm mt-3" type="submit">Добавить</button>
+                            <button className="btn btn-primary btn-sm mt-3" type="submit">Создать проект</button>
                         </form>
                         )}
                     </div>

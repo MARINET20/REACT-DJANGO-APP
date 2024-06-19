@@ -369,7 +369,7 @@ export class CreateDiscipline extends Component {
               <div>
                 <button className="update-file" onClick={() => this.fileInput.click()}>
                   <img width="24" height="24" src="https://img.icons8.com/pastel-glyph/64/FFFFFF/upload--v1.png" alt="upload--v1"/>
-                  Загрузить файл
+                  Загрузить оценки по дисциплине
                 </button>
                 <input
                   ref={(ref) => this.fileInput = ref}
@@ -381,7 +381,7 @@ export class CreateDiscipline extends Component {
               <div style={{marginLeft:'10px'}}>
                 <button className="update-file" style={{background: '#00abed'}} onClick={() => this.inputFile.click()}>
                   <img width="24" height="24" src="https://img.icons8.com/forma-light/24/FFFFFF/file.png" alt="file"/>
-                  Загрузить отчет
+                  Загрузить отчет по проекту
                 </button>
                 <input
                   ref={(ref) => this.inputFile = ref}
@@ -399,7 +399,7 @@ export class CreateDiscipline extends Component {
                 <div className="row mt-3">
                   <div className="col">
                     <div className='d-flex'>
-                      <label className="form-label" htmlFor="name" style={{fontWeight:'600'}}>Выберите учебную дисциплину</label>
+                      <label className="form-label" htmlFor="name" style={{fontWeight:'600'}}>Выберите дисциплину</label>
                     </div>
                     <Multiselect
                       options={this.state.disciplines ? this.state.disciplines : []}
@@ -450,15 +450,18 @@ export class CreateDiscipline extends Component {
                       className="info-team"
                       key={index}>{item}</span>
                   ))}
-                  {Object.values(studentName).length > 1 && (
+                  </div>
+                </div>
+                <div className='row mt-3'>
+                  <div className="col">
+                    <label className="form-label" htmlFor="course" style={{fontWeight:'600'}}>Название проекта</label>
                     <input 
-                    type="text" 
-                    className="form-control mt-3" 
-                    placeholder="Название проекта" 
-                    value={this.state.projectName} 
-                    onChange={this.handleProjectNameChange} 
-                  />
-                  )}
+                      type="text" 
+                      className="form-control mt-3" 
+                      placeholder="Название проекта" 
+                      value={this.state.projectName} 
+                      onChange={this.handleProjectNameChange} 
+                    />
                   </div>
                 </div>
                 <div className='row mt-3'>
@@ -579,7 +582,7 @@ export class CreateDiscipline extends Component {
                     value={this.state.newDisciplineInput}
                     onChange={this.handleNewDisciplineInputChange}
                   />
-                  <span className="lh-24" style={{ fontSize: '14px',marginLeft:'10px', cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.addNewDisciplines}>добавить</span>
+                  <span className="lh-24" style={{ fontSize: '14px',marginLeft:'10px', cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.addNewDisciplines}>добавить дисциплину</span>
                 </div>
               )}
             <div className="row mt-3">
@@ -621,7 +624,7 @@ export class CreateDiscipline extends Component {
                         value={this.state.newTagInput}
                         onChange={this.handleNewTagInputChange}
                     />
-                    <span className="lh-24" style={{ fontSize: '14px',marginLeft:'10px', cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.addNewRequirement}>добавить</span>
+                    <span className="lh-24" style={{ fontSize: '14px',marginLeft:'10px', cursor:'pointer', background:'#00ABED', color:'white', padding: '7px 24px', borderRadius: '20px', fontWeight: '600'}} onClick={this.addNewRequirement}>добавить навык</span>
                 </div>
             )}
 
