@@ -91,7 +91,6 @@ export class RequirementList extends Component {
                     </p>
                 </span>
                 </div>
-                <p style={{color:"cccccc", fontWeight:'lighter'}}>Каждая цифра может быть выбрана только один раз</p>
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                 {this.state.selectedSkills.map(skill => (
                     <div key={skill.id}>

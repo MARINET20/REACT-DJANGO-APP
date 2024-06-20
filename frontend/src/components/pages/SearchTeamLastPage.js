@@ -105,32 +105,51 @@ export class SearchTeamLastPage extends Component {
                                 <RadarChart labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)} />
                             </div>
                             <div className='right' >
-                                <div className="flex fl-column">
+                                <div className="flex fl-row">
                                     <div className='flex fl-column align-items-start'>
                                         {teamInfo.studentIds.map((studentId, studentIndex) => {
                                             const student = this.state.students.find(student => student.id === studentId);
                                             return (
-                                                <div key={index} className="card_up" style={{width:'400px'}}>
-                                                    <div style={{width:'260px'}} className="single_advisor_profile wow fadeInUp" >
-                                                        <div className="advisor_thumb">
-                                                            <img width="100%" 
-                                                            height="auto" 
-                                                            src={
-                                                                student.photo
-                                                                ? student.photo
-                                                                : student.name.endsWith('а')
-                                                                    ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
-                                                                    : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
-                                                            }
-                                                            alt=""/>
-                                                        </div>
-                                                        <div style={{position: 'relative', zIndex: '1', padding: '30px', textAlign: 'right'}}>
-                                                            <h6>{student.name}</h6>
-                                                            <p>{student.direction}</p>
-                                                            <h6>{student.course} курс</h6>
-                                                        </div>
+                                                <div key={index} className='d-flex justify-content-between'>
+                                                    <img width="100%" 
+                                                    height="auto" 
+                                                    src={
+                                                        student.photo
+                                                        ? student.photo
+                                                        : student.name.endsWith('а')
+                                                            ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                                            : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                                    }
+                                                    alt='' 
+                                                    className='prew-user-photo'/>
+                                                    <div style={{position: 'relative', zIndex: '1', padding: '30px', textAlign: 'right'}}>
+                                                        <h6>{student.name}</h6>
+                                                        <p>{student.direction}</p>
+                                                        <h6>{student.course} курс</h6>
                                                     </div>
+                                                    
                                                 </div>
+                                                // <div key={index} className="card_up" style={{width:'400px'}}>
+                                                //     <div style={{width:'260px'}} className="single_advisor_profile wow fadeInUp" >
+                                                //         <div className="advisor_thumb">
+                                                //             <img width="100%" 
+                                                //             height="auto" 
+                                                //             src={
+                                                //                 student.photo
+                                                //                 ? student.photo
+                                                //                 : student.name.endsWith('а')
+                                                //                     ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
+                                                //                     : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                                //             }
+                                                //             alt=""/>
+                                                //         </div>
+                                                //         <div style={{position: 'relative', zIndex: '1', padding: '30px', textAlign: 'right'}}>
+                                                //             <h6>{student.name}</h6>
+                                                //             <p>{student.direction}</p>
+                                                //             <h6>{student.course} курс</h6>
+                                                //         </div>
+                                                //     </div>
+                                                // </div>
                                             )   
                                         })}
                                     </div>
@@ -143,8 +162,8 @@ export class SearchTeamLastPage extends Component {
                                     <div key={index} className="card_up col-12 col-sm-6 col-lg-3 order-lg-2" >
                                         <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s" style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
                                         <div className="advisor_thumb">
-                                            <img width="200" 
-                                            height="200" 
+                                            <img width="100%" 
+                                            height="auto" 
                                             src={
                                                 student.photo
                                                 ? student.photo
@@ -176,7 +195,7 @@ export class SearchTeamLastPage extends Component {
                 </button>
             </div>
             <button
-                className="btn-next mt-5"
+                className="btn-next "
                 onClick={this.handleSelectTeam}
             >Выбрать&nbsp;команду</button>
         </div>)}

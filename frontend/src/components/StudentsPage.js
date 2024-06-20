@@ -97,7 +97,15 @@ export class StudentsPage extends Component {
                 </div>
                 <div className='flex jc-sb mt-3'> 
                     <div style={{flexGrow: 1}}>
-                        <p style={{fontWeight: '600'}}>Поиск студента:</p>
+                        <div className='d-flex justify-content-between'>
+                            <p style={{fontWeight: '600'}}>Поиск студента:</p>
+                            <p>Найдено {this.state.students.filter(s => {
+                                if (s.name.toLowerCase().includes(searchValue.toLowerCase())) {
+                                    return true;
+                                }
+                                return false;
+                            }).length} студентов</p>
+                        </div>
                         <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} /> 
                     </div>
                 </div>
