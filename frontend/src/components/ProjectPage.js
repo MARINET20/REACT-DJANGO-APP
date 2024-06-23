@@ -4,6 +4,8 @@ import { API_URL } from '..';
 import {useParams} from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { CProgressBar, CProgress } from '@coreui/bootstrap-react'
+
 
 
 const ProjectPage = () => {
@@ -92,6 +94,29 @@ const ProjectPage = () => {
                               <div key={index} style={{ marginBottom: '10px', fontWeight: '600' }}>
                                   {group.skills.join(', ')} :
                                   <span>
+                                    <CProgress height={20} className="mb-3">
+                                      <CProgressBar color="info" variant="striped" animated value={Math.round(parseFloat(group.weight_skill) * 100)}>{Math.round(parseFloat(group.weight_skill) * 5)}</CProgressBar>
+                                    </CProgress>
+                                  </span>
+                              </div>
+                          ))}
+                  </div>
+                  {/* <div>
+                      {project.skills
+                          .sort((a, b) => b.weight_skill - a.weight_skill)
+                          .reduce((acc, req) => {
+                              const existingReq = acc.find(item => item.weight_skill === req.weight_skill);
+                              if (existingReq) {
+                                  existingReq.skills.push(req.skill);
+                              } else {
+                                  acc.push({ weight_skill: req.weight_skill, skills: [req.skill] });
+                              }
+                              return acc;
+                          }, [])
+                          .map((group, index) => (
+                              <div key={index} style={{ marginBottom: '10px', fontWeight: '600' }}>
+                                  {group.skills.join(', ')} :
+                                  <span>
                                       {[...Array(5)].map((_, index) => (
                                           <svg
                                               key={index}
@@ -111,7 +136,7 @@ const ProjectPage = () => {
                                   </span>
                               </div>
                           ))}
-                  </div>
+                  </div> */}
                   {/* <div>
                     {project.skills.sort((a, b) => b.weight_skill - a.weight_skill).map((req, index) => (
                           <div key={index} style={{marginBottom: '10px', fontWeight:'600'}}>

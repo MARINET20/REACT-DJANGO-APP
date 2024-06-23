@@ -53,7 +53,7 @@ export class SearchTeamLastPage extends Component {
         formData.studentIds = selectedTeam.studentIds; 
         formData.project_id =  this.props.project_id;
         this.setState({ formData });
-        const { history } = useNavigate;
+        const history = useNavigate();
 
         try {
             const response = await fetch(`${API_URL}/add-team-db`, {
@@ -67,7 +67,7 @@ export class SearchTeamLastPage extends Component {
             if (response.ok) {
                 const data = await response.json();
                 alert('Команда успешно добавлена!');
-                history('/projects')
+                history('/projects') 
             } else {
                 const data = await response.json();
                 alert('Ошибка при добавления команды');
@@ -87,7 +87,6 @@ export class SearchTeamLastPage extends Component {
             <div>
                 <div className='pt-30 d-flex'>
                     <h1 className=" m-0">Идет поиск команды...</h1>  
-                    {/* <img width="60" height="60" src="https://img.icons8.com/ios-glyphs/90/00abed/sad.png" alt="sad"/> */}
                 </div>
             </div>
         ):(
@@ -95,14 +94,17 @@ export class SearchTeamLastPage extends Component {
             <div className='pt-30'>
                 <h1 className=" m-0" style={{color: '#00AEEF'}}>Ваша команда</h1>  
             </div>
-            
+            <button
+                className="btn-next mt-3"
+                onClick={this.handleSelectTeam}
+            >Выбрать&nbsp;команду</button>
             <div id="carouselExampleControls" className="carousel carousel-dark slide mt-3" data-bs-ride="carousel">
                 <div className="carousel-inner">
                     {this.state.teamsArray.map((teamInfo, index) => (
                         <div key={index} className={`carousel-item ${index === activeSlideIndex ? 'active' : ''}`}>
                             <div className='section news-detail mt-0'>
                             <div className='left' style={{backgroundColor:'#fff'}}>
-                                <RadarChart labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)} />
+                                <RadarChart projectName={this.props.title} labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)} />
                             </div>
                             <div className='right' >
                                 <div className="flex fl-row">
@@ -129,60 +131,11 @@ export class SearchTeamLastPage extends Component {
                                                     </div>
                                                     
                                                 </div>
-                                                // <div key={index} className="card_up" style={{width:'400px'}}>
-                                                //     <div style={{width:'260px'}} className="single_advisor_profile wow fadeInUp" >
-                                                //         <div className="advisor_thumb">
-                                                //             <img width="100%" 
-                                                //             height="auto" 
-                                                //             src={
-                                                //                 student.photo
-                                                //                 ? student.photo
-                                                //                 : student.name.endsWith('а')
-                                                //                     ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
-                                                //                     : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
-                                                //             }
-                                                //             alt=""/>
-                                                //         </div>
-                                                //         <div style={{position: 'relative', zIndex: '1', padding: '30px', textAlign: 'right'}}>
-                                                //             <h6>{student.name}</h6>
-                                                //             <p>{student.direction}</p>
-                                                //             <h6>{student.course} курс</h6>
-                                                //         </div>
-                                                //     </div>
-                                                // </div>
                                             )   
                                         })}
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className="d-flex justify-content-center mt-5">
-                            {teamInfo.studentIds.map((studentId, studentIndex) => {
-                                const student = this.state.students.find(student => student.id === studentId);
-                                return (
-                                    <div key={index} className="card_up col-12 col-sm-6 col-lg-3 order-lg-2" >
-                                        <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s" style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
-                                        <div className="advisor_thumb">
-                                            <img width="100%" 
-                                            height="auto" 
-                                            src={
-                                                student.photo
-                                                ? student.photo
-                                                : student.name.endsWith('а')
-                                                    ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
-                                                    : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
-                                            }
-                                            alt=""/>
-                                        </div>
-                                        <div className="single_advisor_details_info" data-bs-toggle="modal" data-bs-target="#exampleModal" style={{cursor:'pointer'}}>
-                                            <h6>{student.name}</h6>
-                                            <p className="designation">{student.direction}</p>
-                                            <h6 className="designation">{student.course} курс</h6>
-                                        </div>
-                                        </div>
-                                    </div>
-                                )   
-                            })}
-                            </div> */}
                             </div>
                         </div>
                     ))}
@@ -194,10 +147,10 @@ export class SearchTeamLastPage extends Component {
                     <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
             </div>
-            <button
+            {/* <button
                 className="btn-next "
                 onClick={this.handleSelectTeam}
-            >Выбрать&nbsp;команду</button>
+            >Выбрать&nbsp;команду</button> */}
         </div>)}
       </div>
     )

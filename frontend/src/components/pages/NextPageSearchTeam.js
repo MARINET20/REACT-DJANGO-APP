@@ -95,7 +95,7 @@ const NextPageSearchTeam = () => {
             <div className='container'>
                 { isShowDivTeam ? (
                 <div>
-                    <SearchTeamLastPage teams={teams} project_id={id} />
+                    <SearchTeamLastPage teams={teams} project_id={id} title={selectedProject.title}/>
                 </div>
                 ) : (
                 <div>

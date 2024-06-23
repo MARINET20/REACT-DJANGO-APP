@@ -165,6 +165,10 @@ export class EditProjectPage extends Component {
                 selectedTeachers: [],
             });
 
+            localStorage.clear('selectedSkill')
+            localStorage.clear('selectedTags')
+            localStorage.clear('selectedCurators')
+
           } else {
             const data = await response.json();
             alert(data);
@@ -172,9 +176,7 @@ export class EditProjectPage extends Component {
         } catch (error) {
             alert('Ошибка при отправке данных');
         }
-        localStorage.clear('selectedSkill')
-        localStorage.clear('selectedTags')
-        localStorage.clear('selectedCurators')
+       
     }
 
     handleChange = (e) => {

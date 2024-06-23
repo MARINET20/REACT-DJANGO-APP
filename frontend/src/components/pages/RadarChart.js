@@ -1,7 +1,7 @@
 import React from 'react';
 import { Radar } from 'react-chartjs-2';
 
-const RadarChart = ({ labels, data }) => {
+const RadarChart = ({ projectName, labels, data }) => {
     const radarData = {
         labels: labels,
         datasets: [
@@ -19,7 +19,18 @@ const RadarChart = ({ labels, data }) => {
         scale: {
             ticks: {
                 beginAtZero: true,
-            },
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: `${projectName}`,
+                color: "#00325c",
+                font: {
+                    weight: 'bold',
+                    size: 16
+                },
+            }
         },
     };
 
