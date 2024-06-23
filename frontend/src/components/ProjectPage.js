@@ -57,7 +57,7 @@ const ProjectPage = () => {
         <div>
           <div className='container'>
             <div className='pt-30' style={{color: '#00AEEF', cursor:'pointer'}} onClick={handleClick}>
-              <h1>{showFullTitle ? project.title : project.title.length > 10 ? project.title.slice(0, 10) + '...' : project.title}</h1>
+              <h1>{showFullTitle ? project.title : project.title.length > 10 ? project.title.slice(0, 30) + '...' : project.title}</h1>
             </div>
           </div>
           <div className='container mt-3'>
@@ -95,65 +95,24 @@ const ProjectPage = () => {
                                   {group.skills.join(', ')} :
                                   <span>
                                     <CProgress height={20} className="mb-3">
-                                      <CProgressBar color="info" variant="striped" animated value={Math.round(parseFloat(group.weight_skill) * 100)}>{Math.round(parseFloat(group.weight_skill) * 5)}</CProgressBar>
+                                      <CProgressBar color="info" variant="striped" value={Math.round(parseFloat(group.weight_skill) * 100)}>{Math.round(parseFloat(group.weight_skill) * 5)}</CProgressBar>
                                     </CProgress>
                                   </span>
                               </div>
                           ))}
                   </div>
-                  {/* <div>
-                      {project.skills
-                          .sort((a, b) => b.weight_skill - a.weight_skill)
-                          .reduce((acc, req) => {
-                              const existingReq = acc.find(item => item.weight_skill === req.weight_skill);
-                              if (existingReq) {
-                                  existingReq.skills.push(req.skill);
-                              } else {
-                                  acc.push({ weight_skill: req.weight_skill, skills: [req.skill] });
-                              }
-                              return acc;
-                          }, [])
-                          .map((group, index) => (
-                              <div key={index} style={{ marginBottom: '10px', fontWeight: '600' }}>
-                                  {group.skills.join(', ')} :
-                                  <span>
-                                      {[...Array(5)].map((_, index) => (
-                                          <svg
-                                              key={index}
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="15"
-                                              height="15"
-                                              style={{
-                                                  fill: index < Math.round(parseFloat(group.weight_skill) * 5) ? '#f0c313' : '#b9b9b9',
-                                                  margin: '3px 1px',
-                                                  cursor: 'pointer',
-                                                  marginLeft: '10px'
-                                              }}
-                                          >
-                                              <path d="M7.5 0l2.3 4.6h4.7l-3.4 3.3 1.2 6.6-6-3.4-6 3.4 1.3-6.6-3.4-3.3h4.6z" />
-                                          </svg>
-                                      ))}
-                                  </span>
-                              </div>
-                          ))}
-                  </div> */}
-                  {/* <div>
-                    {project.skills.sort((a, b) => b.weight_skill - a.weight_skill).map((req, index) => (
-                          <div key={index} style={{marginBottom: '10px', fontWeight:'600'}}>
-                              {req.skill} :
-                              <span>
-                              {[...Array(5)].map((_, index) => (
-                                  <svg key={index} xmlns="http://www.w3.org/2000/svg" 
-                                  width="15" 
-                                  height="15" 
-                                  style={{fill: index < Math.round(parseFloat(req.weight_skill) * 5) ? '#f0c313' : '#b9b9b9', margin: '3px 1px', cursor: 'pointer', marginLeft: '10px'}}>
-                                      <path d="M7.5 0l2.3 4.6h4.7l-3.4 3.3 1.2 6.6-6-3.4-6 3.4 1.3-6.6-3.4-3.3h4.6z"/>
-                                  </svg>
-                              ))}
-                              </span>
-                          </div>
-                      ))}
-                  </div> */}
+                  <div className='' style={{borderTop: '0.5px solid #8d8c8c'}}></div>
+                  <div className='flex align-items-between color-deep-grey mt-2'>
+                    <span>
+                        <p>
+                            1 - наименее важный;
+                            2 - умеренной важности;
+                            3 - средней важности;
+                            4 - очень важный;
+                            5 - наиболее важный;
+                        </p>
+                    </span>
+                  </div>
                 </div>
                 <div className='right right-block-bg-white'>
                   <div>
@@ -175,8 +134,8 @@ const ProjectPage = () => {
                             teacher.photo
                             ? teacher.photo
                             : teacher.name.endsWith('а')
-                                ? 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
-                                : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'
+                                ? 'https://elinta96.ru/images/2023/05/08/woman_icon-2.png'
+                                : 'https://www.ds-istanbul.net/Files/assets/teacher-placeholder-male.jpg'
                           }
                           alt='' 
                           className='prew-user-photo'/>
@@ -190,6 +149,7 @@ const ProjectPage = () => {
                       {project.students.map((student) => (
                         <div className='d-flex justify-content-between'>
                           <img 
+                          // src={student.photo ? student.photo : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'}
                           src={
                             student.photo
                             ? student.photo
@@ -206,7 +166,7 @@ const ProjectPage = () => {
                         </div>
                       ))}
                     </div>
-                    {!project.status && user  && is_user && !is_user.is_student ? ( <a 
+                    {!project.status && user  && is_user && !is_user.is_student && project.students.length != project.count ? ( <a 
                       href={`/team/${project.id}`}
                       className='btn btn-sm mt-3'
                       style={{background: '#212529', color:'white', marginLeft:'10px'}}
