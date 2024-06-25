@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { CProgressBar, CProgress } from '@coreui/bootstrap-react'
 import { API_URL } from '../..';
 import {
     useNavigate ,
 } from "react-router-dom";
-import { Radar } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import RadarChart from './RadarChart';
 
@@ -53,7 +51,8 @@ export class SearchTeamLastPage extends Component {
         formData.studentIds = selectedTeam.studentIds; 
         formData.project_id =  this.props.project_id;
         this.setState({ formData });
-        const history = useNavigate();
+
+        // const history = useNavigate();
 
         try {
             const response = await fetch(`${API_URL}/add-team-db`, {
@@ -67,7 +66,7 @@ export class SearchTeamLastPage extends Component {
             if (response.ok) {
                 const data = await response.json();
                 alert('Команда успешно добавлена!');
-                history('/projects') 
+                // history('/projects') 
             } else {
                 const data = await response.json();
                 alert('Ошибка при добавления команды');
@@ -91,8 +90,11 @@ export class SearchTeamLastPage extends Component {
             </div>
         ):(
         <div>
-            <div className='pt-30'>
-                <h1 className=" m-0" style={{color: '#00AEEF'}}>Ваша команда</h1>  
+            <div className='pt-30'> 
+                <h1 className=" m-0" style={{color: '#00AEEF'}}> Ваша команда для проекта</h1>
+                <br/>
+                <h5 className=" m-0" style={{color: '#00325c'}}> {this.props.title}</h5>
+                {/* <h4 style={{ color: "#00325c"}}>Ваша команда</h4> */}
             </div>
             <button
                 className="btn-next mt-3"
@@ -104,7 +106,7 @@ export class SearchTeamLastPage extends Component {
                         <div key={index} className={`carousel-item ${index === activeSlideIndex ? 'active' : ''}`}>
                             <div className='section news-detail mt-0'>
                             <div className='left' style={{backgroundColor:'#fff'}}>
-                                <RadarChart projectName={this.props.title} labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)} />
+                                <RadarChart labels={teamInfo.skillIds.map(skillId => this.state.skills.find(s => s.id === skillId).skill)} data={teamInfo.skillIds.map(skillId => teamInfo.score[skillId] >= 2 && teamInfo.score[skillId] <= 5 ? Math.round((teamInfo.score[skillId] - 1) * 25) : 0)}  />
                             </div>
                             <div className='right' >
                                 <div className="flex fl-row">

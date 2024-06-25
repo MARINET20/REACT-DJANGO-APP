@@ -122,14 +122,14 @@ export class Profile extends Component {
       <div></div>
     }
 
-    // let imageUrl = ''; // заменим const на let, так как значение будет изменяться
+    let imageUrl = ''; // заменим const на let, так как значение будет изменяться
 
-    // if (is_user?.user_info.name.endsWith('а')) {
-    //   imageUrl = 'https://i.pinimg.com/736x/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.jpg'
-    // } else {
-    //   imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'; // исправляем строку с imageUrl
-    // }
-    const imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png';
+    if (is_user?.user_info.name.endsWith('а')) {
+      imageUrl = 'https://elinta96.ru/images/2023/05/08/woman_icon-2.png'
+    } else {
+      imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'; // исправляем строку с imageUrl
+    }
+    // const imageUrl = this.state.avatarUrl ? `${URL}${this.state.avatarUrl}` : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png';
     return (
         <AuthContext.Consumer>
         {({ user, logoutUser }) => (

@@ -271,7 +271,7 @@ export class CreateProject extends Component {
                                 <label className="form-label" style={{fontWeight:'600'}}>Требования</label>
                                     <RequirementList/>
                             </div>
-                            <button className="btn btn-primary btn-sm mt-3" type="submit">Создать проект</button>
+                            <button className="btn btn-primary js-btn-auth mt-3" type="submit" style={{backgroundColor:'00abed'}}>Создать проект</button>
                         </form>
                         )}
                     </div>

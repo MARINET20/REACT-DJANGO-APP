@@ -101,10 +101,10 @@ export class RequirementList extends Component {
                             key={step}
                             style={{
                                 backgroundColor: step === Math.round(parseFloat(skill.weight_skill) * 5) ? '#D5E6ED' : '#fff',
-                                borderColor: step === Math.round(parseFloat(skill.weight_skill) * 5) ? '#00abed' : '#cccccc',
+                                borderColor: step === Math.round(parseFloat(skill.weight_skill) * 5) ? '#0B57D0' : '#cccccc',
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
-                                color: step === Math.round(parseFloat(skill.weight_skill) * 5) ? '#00abed' : '#000',
+                                color: step === Math.round(parseFloat(skill.weight_skill) * 5) ? '#0B57D0' : '#000',
                                 padding: '15px',
                                 margin: '0 4px',
                                 cursor: 'pointer',

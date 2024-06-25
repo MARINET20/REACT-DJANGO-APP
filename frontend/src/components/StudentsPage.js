@@ -141,7 +141,7 @@ export class StudentsPage extends Component {
                         <div key={index} className="card_up col-12 col-sm-6 col-lg-3">
                             <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s" onClick={() => this.openModal(student)} style={{visibility: 'visible', animationDelay: '0.3s', animationName: 'fadeInUp'}}>
                             <div className="advisor_thumb">
-                                <img width="261" height="230" src={student.photo ? student.photo : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'} alt="" />
+                                <img width="100%" height="auto" src={student.photo ? student.photo : 'https://rsv.ru/account/img/placeHolder-m.4c1254a5.png'} alt="" />
                                 <div className="social-info" style={{fontStyle: 'normal', fontWeight: '400', fontSize: '.93375rem', lineHeight: '1.34875rem'}}>Статус: <span style={{color: 'rgb(104, 200, 122)'}}> Участник
                                     </span>
                                 </div>
